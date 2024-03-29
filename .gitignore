@@ -1,0 +1,33 @@
+# datasets
+datasets/
+
+#venv
+.cholecinstanceseg/
+
+#cache
+__pycache__/
+
+#logs
+combined_logs_store/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+outputs/ 
+
+logs_folder/
+
+sam_checkpoints/
+
+sample_images/
+
+
+tool-pose-annotation-gui/
+
+results/
+
+generated_labelme/
+
+.vscode/
+
+logs/
