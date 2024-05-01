@@ -120,5 +120,9 @@ class CholecInstanceSegVariables(object):
     background_id = 0
     
     dataset_size = 39078
+    
+    seq_to_split_dict = {
+        
+    }
 
     

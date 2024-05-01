@@ -37,7 +37,7 @@ class DatasetMetadata:
                 seq_1: [
                     {
                         img_path: img_path
-                        img_path: ann_path
+                        ann_path: ann_path
                     },...
                 ]
                 

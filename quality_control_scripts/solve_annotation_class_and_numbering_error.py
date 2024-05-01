@@ -4,7 +4,7 @@ from os.path import join
 import shutil
 from quality_control_scripts.quality_control_utils import ensure_dataset_size_is_correct, get_seq_folder_from_ann_name
 
-
+## todo improve quality control to use metadata. code breaks if I change my dataset structure. with metadata code does not break if I make these changes. 
 
 
 def check_start_at_one(lst):
@@ -90,16 +90,16 @@ def get_ann_with_annotation_class_and_numbering_errors_for_dataset(dataset_dir,
     
     for split in os.listdir(dataset_dir):
         split_dir = join(dataset_dir, split)
-        assert os.path.isdir(split_dir), f'{split_dir} is not a folder, expected only splits here. '  
+        if os.path.isdir(split_dir):  
                 
-        ann_with_annotation_class_and_numbering_errors_in_dataset[split_dir] = {}
-        for seq in os.listdir(split_dir):
-            seq_dir = join(dataset_dir, split, seq)
-            seq_dir = seq_dir.replace('\\', '/')
-            ann_with_annotation_class_and_numbering_errors_in_seq = get_ann_with_annotation_class_and_numbering_errors_in_seq_dir(seq_dir=seq_dir, 
-                                                                                                                                  class_names=class_names,
-                                                                                                                                  log_dir=log_dir)  
-            ann_with_annotation_class_and_numbering_errors_in_dataset[split_dir][seq] = ann_with_annotation_class_and_numbering_errors_in_seq
+            ann_with_annotation_class_and_numbering_errors_in_dataset[split_dir] = {}
+            for seq in os.listdir(split_dir):
+                seq_dir = join(dataset_dir, split, seq)
+                seq_dir = seq_dir.replace('\\', '/')
+                ann_with_annotation_class_and_numbering_errors_in_seq = get_ann_with_annotation_class_and_numbering_errors_in_seq_dir(seq_dir=seq_dir, 
+                                                                                                                                    class_names=class_names,
+                                                                                                                                    log_dir=log_dir)  
+                ann_with_annotation_class_and_numbering_errors_in_dataset[split_dir][seq] = ann_with_annotation_class_and_numbering_errors_in_seq
          
     return  ann_with_annotation_class_and_numbering_errors_in_dataset       
                                   
@@ -114,39 +114,7 @@ def get_ann_with_annotation_class_and_numbering_errors_for_dataset(dataset_dir,
 # Calculate datasetmetadata to ensure no mistakes have been made. 
 # Compare the total_size to  39078 this should be a static variables
 
-def get_back_files_from_the_repair_folder_to_the_original_folders(dataset_dir,
-                                                                 repair_dir='C:/Users/tal22/Documents/repositories/sam_annotator_tool_generate_instance/segment-anything-annotator/seq/repair'
-                                                                  ):
-    repair_ann_dir = join(repair_dir, 'ann_dir')
-    repair_img_dir = join(repair_dir, 'img_dir')
-    assert os.path.isdir(repair_ann_dir), 'the repair directory does not contain an ann_dir'
-    assert os.path.isdir(repair_img_dir), 'the repair directory does not contain an img_dir'
-    
-    repaired_annotations = os.listdir(repair_ann_dir) 
-    
-    for ann_name in repaired_annotations:     
-        ann_path = join(repair_ann_dir, ann_name)         
-        img_path = ann_path.replace('ann_dir', 'img_dir').replace('.json','.png')
-        img_name = os.path.basename(img_path)
-        
-        dataset_seq_dir = get_seq_folder_from_ann_name(dataset_dir,
-                                ann_name)
-        
-        assert dataset_seq_dir, 'there is an error with the ann_naming or your folder naming'
-        
-        dataset_ann_dir = join(dataset_seq_dir, 'ann_dir')
-        dataset_img_dir = join(dataset_seq_dir, 'img_dir')
-        
-        
-        if os.path.exists(ann_path) and os.path.exists(img_path):           
-            shutil.move(ann_path, join(dataset_ann_dir, ann_name))
-            shutil.move(img_path, join(dataset_img_dir, img_name ))
-            print(f"Moved {ann_name} and corresponding image {img_name} to repair directory.")
-        else:
-            print(f"Error: {ann_name} or corresponding image {img_name} not found.")
-            
-    ##Ensure all images are back
-    ensure_dataset_size_is_correct(dataset_dir)
+
     
     
         
