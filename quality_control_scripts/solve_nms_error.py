@@ -79,7 +79,7 @@ def get_contours_with_bad_nms_for_seq(seq_dir, log_dir):
             
             
             for result in iou_results:
-                if result['iou'] > 0.8:
+                if result['iou'] > 0.2:
                     file.write( '====================================================\n' )    
                     file.write(f"{ann_filename}, Comparison between {result['mask1_label']}_{result['mask1_id']} and {result['mask2_label']}_{result['mask2_id']}: IoU = {result['iou']:.2f}\n")          
 

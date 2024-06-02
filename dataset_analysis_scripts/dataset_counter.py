@@ -18,64 +18,76 @@ class DatasetCounter:
         self.dataset_style = dataset_style
         self.dataset = DatasetMetadata(path_to_dataset=path_to_dataset,
                                           dataset_name=dataset_name,
-                                          dataset_style=dataset_style)
+                                          dataset_folder_style=dataset_style)
         self.dataset_metadata = self.dataset.get_dataset_metadata()
         self.class_names = class_names
-        self.class_frequency_dict_dataset = self.generate_class_frequency_dict_dataset()
+        self.class_frequency_dict_dataset, self.class_polygon_frequency_dict_dataset = self.generate_class_frequency_dict_and_class_polygon_frequency_dict_for_dataset()
         
-
-    ## We want to have a count per image and annotation of the values, 
-    ## We want to have a way to go through and sum these up. 
-    
-    ## step 1.
-    ## so we get an instance
-    ## we get the instruments in the instance for each class. store this as a dict. we could use list but we choose dict because it is easier to debug dicts and we can convert.
-            ##performance is not an issue.  
-    
-    ## step 2, 
-    ## we perform this for every instance and produce a new dict from the dataset metadata called, class frequency dict
-    ## we essentailly repeat step 1 for every metadata instance and store somethng that is like
-        # train - seq - image - name  - dict. dict should have keys as instrument names and values as frequency. 
-    ## We store this value. 
-    
-    ## sum over various settings. 
-    ## we want to know this values for the dataset, we want to know these values for each split, and each sequence.     
-    
-    
-    def generate_class_frequency_dict_image(self, ann_path):
-        
+   
+    def generate_class_frequency_dict_and_class_polygon_frequency_dict_for_image(self, ann_path):
         class_frequency_dict_image = {class_name: 0   for class_name in self.class_names}
+        class_polygon_frequency_dict_image = {class_name: 0   for class_name in self.class_names}
         
         ann = read_from_json(ann_path)
         for shape in ann['shapes']:
             assert shape['group_id'] != 0, f"there is an error in {ann_path}, there is a group id that is 0 for {shape['label']}"
+            
+            class_polygon_frequency_dict_image[shape['label']] += 1  # No need to handle multiple polygons.    
             if shape['group_id'] > class_frequency_dict_image[shape['label']]: #handle multiple shapes with the same group_id 
                 class_frequency_dict_image[shape['label']] += 1 
+                 
         
-        return class_frequency_dict_image
+        return class_frequency_dict_image, class_polygon_frequency_dict_image
     
-    def generate_class_frequency_dict_dataset(self):
+    def generate_class_frequency_dict_and_class_polygon_frequency_dict_for_dataset(self):
         # we need to walk through the dict and get the result. 
         # for each ann_path give me a frequency is what I want to do. So keep going in till you find a variable.
         
         class_frequency_dict_dataset = {}
+        class_polygon_frequency_dict_dataset = {}
         for split, seq_data in self.dataset_metadata.items():
             class_frequency_dict_split = {}
+            class_polygon_frequency_dict_split = {}
             for seq, annotations in seq_data.items():
                 class_frequency_dict_seq = {}
+                class_polygon_frequency_dict_seq = {}
                 for annotation in annotations:
                     ann_path = annotation['ann_path']
                     ann_name = ann_path.split('/')[-1]
-                    class_frequency_dict_image = self.generate_class_frequency_dict_image(ann_path)
+                    class_frequency_dict_image, class_polygon_frequency_dict_image  = self.generate_class_frequency_dict_and_class_polygon_frequency_dict_for_image(ann_path)
                     class_frequency_dict_seq[ann_name] = class_frequency_dict_image
+                    class_polygon_frequency_dict_seq[ann_name] = class_polygon_frequency_dict_image
+                    
                 class_frequency_dict_split[seq] = class_frequency_dict_seq
+                class_polygon_frequency_dict_split[seq] = class_polygon_frequency_dict_seq
+                
             class_frequency_dict_dataset[split] = class_frequency_dict_split
-        return class_frequency_dict_dataset
+            class_polygon_frequency_dict_dataset[split] = class_polygon_frequency_dict_split
+        return class_frequency_dict_dataset,  class_polygon_frequency_dict_dataset
     
     
     def count_class_frequency(self, aggregation_level='dataset'):
         target_dict = {}
         for split, split_data in self.class_frequency_dict_dataset.items():       
+            for seq_name, seq_data in split_data.items():
+                for ann_name, annotation in seq_data.items():                
+                    for instrument, frequency in annotation.items():
+                        if aggregation_level == 'dataset':
+                            target_dict.setdefault(instrument, 0)
+                            target_dict[instrument] += frequency
+                        elif aggregation_level == 'split':
+                            target_dict.setdefault(split, {}).setdefault(instrument, 0)
+                            target_dict[split][instrument] += frequency
+                        elif aggregation_level == 'sequence':
+                            target_dict.setdefault(seq_name, {}).setdefault(instrument, 0)
+                            target_dict[seq_name][instrument] += frequency
+                            
+        return target_dict
+    
+    
+    def count_class_polygon_frequency(self, aggregation_level='dataset'):
+        target_dict = {}
+        for split, split_data in self.class_polygon_frequency_dict_dataset.items():       
             for seq_name, seq_data in split_data.items():
                 for ann_name, annotation in seq_data.items():                
                     for instrument, frequency in annotation.items():
