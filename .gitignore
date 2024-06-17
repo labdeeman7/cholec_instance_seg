@@ -1,6 +1,8 @@
 # datasets
 datasets/
 
+prototypes/
+
 #venv
 .cholecinstanceseg/
 
