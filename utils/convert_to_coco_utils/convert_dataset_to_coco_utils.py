@@ -317,7 +317,7 @@ def mask_or_contour_to_coco(annotation_name: str,
 def annotations_to_coco(dataset_path: str,
                         output_json_path: str,
                         vis: bool = False):
-    """generate the coco_format for my numpy  and label_me json styled annotations 
+    """generate the coco_format for my numpy  and label_me json styled annotations. Requires mmdetection form.  
 
     Args:
         dataset_path (str): path to the dataset to convery

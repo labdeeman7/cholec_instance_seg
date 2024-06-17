@@ -31,3 +31,9 @@ generated_labelme/
 .vscode/
 
 logs/
+
+prototypes/
+
+from_dataset/
+
+panoptic_quality/

@@ -205,9 +205,10 @@ class VisFromLabelMeToImg:
         assert os.path.exists(ann_dir), 'the annotation directory does not exist' 
         
         if os.path.exists(vis_dir):
-            raise ValueError('vis_dir exists, use a non_existing folder')
+            if len(os.listdir(vis_dir)):
+                raise ValueError('vis_dir exists, use a non_existing folder')
         
-        os.makedirs(vis_dir)
+        os.makedirs(vis_dir, exist_ok=True)
          
     
     def create_and_save_img_from_a_single_label_me_dict(self,
@@ -215,7 +216,7 @@ class VisFromLabelMeToImg:
                                                         ann_path: str,
                                                         show_img_name: bool = False):           
         
-        ann = get_json_info(ann_path)
+        ann = read_from_json(ann_path)
         img = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB ) 
         basename = os.path.basename(img_path)
         save_filepath = join(self.vis_dir, basename)
@@ -231,7 +232,7 @@ class VisFromLabelMeToImg:
             title = None    
         
         plot_instance_from_json_contour(points,
-                                fill_contour = False,
+                                fill_contour = True,
                                 img = img,
                                 class_names=class_names,
                                 instance_ids=instance_ids,
@@ -244,12 +245,13 @@ class VisFromLabelMeToImg:
     def run(self, 
             make_video: bool,
             show_img_name: bool,
-            vid_shape= None):
+            vid_shape= None,
+            video_fps = 4):
         
-        img_names = os.listdir(self.img_dir)
-        for img_name in img_names:
-            img_path = join(self.img_dir, img_name)
-            ann_path = join(self.ann_dir, img_name.replace('png', 'json'))
+        ann_names = os.listdir(self.ann_dir)
+        for ann_name in ann_names:
+            ann_path  = join(self.ann_dir, ann_name)
+            img_path = join(self.img_dir, ann_name.replace('json', 'png'))
             
             self.create_and_save_img_from_a_single_label_me_dict(img_path,
                                                              ann_path,
@@ -262,7 +264,8 @@ class VisFromLabelMeToImg:
             from .video_utils import visualize_as_videos
             visualize_as_videos(self.vis_dir, 
                         video_output_path,
-                        vid_shape) 
+                        vid_shape,
+                        video_fps=video_fps) 
               
 
             
@@ -273,4 +276,3 @@ class VisFromLabelMeToImg:
                                                              ann_path)                         
         
         
-          
