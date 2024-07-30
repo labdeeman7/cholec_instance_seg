@@ -31,10 +31,11 @@ There are seven tool categories annotated in CholecInstanceSeg. Grasper, Bipolar
 # Utils
 This repository contains various utility functions and notebooks showing their use, including:
 
-1. Conversion of Labels: Convert labels from instance maps and polygons to segmentation maps. [learn more]()
-2. Label Visualization: Visualize labels as images or videos. [learn more]()
-3. Format Conversion: Convert annotations from the LabelMe format to the COCO format for training and evaluation. [learn more]()
+1. Conversion of Labels: Convert labels from instance maps and polygons to segmentation maps. 
+2. Label Visualization: Visualize labels as images or videos. 
+3. Format Conversion: Convert annotations from the LabelMe format to the COCO format for training and evaluation. 
 
+[learn more](./utilities/README.md)
 
 
 # Citing CholecInstanceSeg. 
