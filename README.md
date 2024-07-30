@@ -14,25 +14,26 @@ sparse.
 3. Instance-CholecT50-sparse: For the remaining 35 sequences in CholecT50(CholecT50-sparse), we sampled these sequences by selecting one frame out of every 30 frames ( 1/30 fps), ensuring a minimum of 50 frames in each sequence.
 4. Instance-Cholec80-sparse: We extracted 28 videos from Cholec80, which are not included in CholecT50 and CholecSeg8k, and sampled these videos at 1/30 fps, ensuring a minimum of 50 frames in each sequence.
 
-![CholecInstanceSeg description](./images/cholec-instance-seg-description.png) 
-![Example Image](./images/statistics_partition.png) 
+![CholecInstanceSeg description](./images/cholec-instance-seg-description.PNG) 
+![Statistics Image](./images/statistics_partition.PNG) 
 
 
-[Instance-Cholec80-sparse(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI)
-[Instance-CholecT50-full(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI)
+Videos coming soon. 
+<!-- [Instance-Cholec80-sparse(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI)
+[Instance-CholecT50-full(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI) -->
 
 
 # Tools
 There are seven tool categories annotated in CholecInstanceSeg. Grasper, Bipolar, Hook, Clipper, Scissors, Irrigator, Snare. 
 
-![tools](./images/tools.png)
+![tools](./images/tools.PNG)
 
 # Utils
 This repository contains various utility functions and notebooks showing their use, including:
 
-1. Conversion of Labels: Convert labels from instance maps and polygons to segmentation maps. [learn more](./images/tools.png)
-2. Label Visualization: Visualize labels as images or videos. [learn more](./images/tools.png)
-3. Format Conversion: Convert annotations from the LabelMe format to the COCO format for training and evaluation. [learn more](./images/tools.png)
+1. Conversion of Labels: Convert labels from instance maps and polygons to segmentation maps. [learn more]()
+2. Label Visualization: Visualize labels as images or videos. [learn more]()
+3. Format Conversion: Convert annotations from the LabelMe format to the COCO format for training and evaluation. [learn more]()
 
 
 
