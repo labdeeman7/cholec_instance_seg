@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-from utils.read_files import read_from_json
+from utilities._general_utils.read_files import read_from_json
+from utilities._general_utils.dataset_variables import CholecInstanceSegVariables
 import os
 from os.path import join
 
@@ -118,16 +119,16 @@ def plot_instance_from_json_contour(contours_list: list,
     plt.grid(True)
     label_name = None
     
-    
-    colors = {
-        'grasper':       'red',
-        'hook':          'green',
-        'irrigator':     'yellow',
-        'clipper':       'purple',
-        'bipolar':       'orange',
-        'scissors':      'cyan',
-        'snare':         'magenta'  
-    }
+    colors = CholecInstanceSegVariables.colors
+    # colors = {
+    #     'grasper':       'red',
+    #     'hook':          'green',
+    #     'irrigator':     'yellow',
+    #     'clipper':       'purple',
+    #     'bipolar':       'orange',
+    #     'scissors':      'cyan',
+    #     'snare':         'magenta'  
+    # }
 
     if img is not None:
         plt.imshow(img)
@@ -150,11 +151,11 @@ def plot_instance_from_json_contour(contours_list: list,
         if instance_ids:
             label_name = f'{label_name}-{instance_ids[i]}'     
         
-
+        normalized_rgb_color = tuple([x / 255 for x in colors[class_names[i]]])
         if fill_contour:
-            plt.fill(contour_np[:, 0], contour_np[:, 1], alpha=0.3, label=label_name, color=colors[class_names[i]] )
+            plt.fill(contour_np[:, 0], contour_np[:, 1], alpha=0.3, label=label_name, color=normalized_rgb_color )
         else:
-            plt.plot(contour_np[:, 0], contour_np[:, 1], label=label_name, color=colors[class_names[i]])
+            plt.plot(contour_np[:, 0], contour_np[:, 1], label=label_name, color=normalized_rgb_color)
         
             
         # Calculate position for the label text
@@ -169,7 +170,7 @@ def plot_instance_from_json_contour(contours_list: list,
             # print(y_pos)
             y_pos = 20
         
-        plt.text(x_pos, y_pos, f'{class_names[i]}-{instance_ids[i]}' , color=colors[class_names[i]], ha='center')
+        plt.text(x_pos, y_pos, f'{class_names[i]}-{instance_ids[i]}' , color=normalized_rgb_color, ha='center')
             
     if title:
         plt.title(title)
