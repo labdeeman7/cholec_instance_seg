@@ -14,22 +14,23 @@ sparse.
 3. Instance-CholecT50-sparse: For the remaining 35 sequences in CholecT50(CholecT50-sparse), we sampled these sequences by selecting one frame out of every 30 frames ( 1/30 fps), ensuring a minimum of 50 frames in each sequence.
 4. Instance-Cholec80-sparse: We extracted 28 videos from Cholec80, which are not included in CholecT50 and CholecSeg8k, and sampled these videos at 1/30 fps, ensuring a minimum of 50 frames in each sequence.
 
-![CholecInstanceSeg description](./images/cholec-instance-seg-description.png) 
-![Statistics Image](./images/statistics_partition.png) 
+![CholecInstanceSeg description](./images/cholec-instance-seg-description.PNG) 
+![Statistics Image](./images/statistics_partition.PNG) 
+
+
+
+## Sample JSON annotation file and folder structure.
 ![Sample JSON file](./images/shapes.png) 
-![Folder structure](./images/folder_structure.png) 
-
-
-# Sample JSON annotation file. 
+![Folder structure](./images/folder_structure.png)  
 
 
 
-# Tools
+## Tools
 There are seven tool categories annotated in CholecInstanceSeg. Grasper, Bipolar, Hook, Clipper, Scissors, Irrigator, Snare. 
 
 ![tools](./images/tools.PNG)
 
-# Utils
+## Utils
 This repository contains various utility functions and notebooks showing their use, including:
 
 1. Conversion of Labels: Convert labels from instance maps and polygons to segmentation maps. 
@@ -39,7 +40,7 @@ This repository contains various utility functions and notebooks showing their u
 [learn more](./utilities/)
 
 
-# Citing CholecInstanceSeg. 
+## Citing CholecInstanceSeg. 
 If you use the annotations provided by our dataset, please include the BibTex citation for the [dataset paper](https://arxiv.org/pdf/2406.16039)  .
 
 
