@@ -14,13 +14,14 @@ sparse.
 3. Instance-CholecT50-sparse: For the remaining 35 sequences in CholecT50(CholecT50-sparse), we sampled these sequences by selecting one frame out of every 30 frames ( 1/30 fps), ensuring a minimum of 50 frames in each sequence.
 4. Instance-Cholec80-sparse: We extracted 28 videos from Cholec80, which are not included in CholecT50 and CholecSeg8k, and sampled these videos at 1/30 fps, ensuring a minimum of 50 frames in each sequence.
 
-![CholecInstanceSeg description](./images/cholec-instance-seg-description.PNG) 
-![Statistics Image](./images/statistics_partition.PNG) 
+![CholecInstanceSeg description](./images/cholec-instance-seg-description.png) 
+![Statistics Image](./images/statistics_partition.png) 
+![Sample JSON file](./images/shapes.png) 
+![Folder structure](./images/folder_structure.png) 
 
 
-Videos coming soon. 
-<!-- [Instance-Cholec80-sparse(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI)
-[Instance-CholecT50-full(VIDX) ](https://www.youtube.com/watch?v=puuDpgUIhqI) -->
+# Sample JSON annotation file. 
+
 
 
 # Tools
@@ -35,11 +36,12 @@ This repository contains various utility functions and notebooks showing their u
 2. Label Visualization: Visualize labels as images or videos. 
 3. Format Conversion: Convert annotations from the LabelMe format to the COCO format for training and evaluation. 
 
-[learn more](./utilities/README.md)
+[learn more](./utilities/)
 
 
 # Citing CholecInstanceSeg. 
-If you use the annotations provided by our dataset, please include the following BibTex citations in your papers.
+If you use the annotations provided by our dataset, please include the BibTex citation for the [dataset paper](https://arxiv.org/pdf/2406.16039)  .
+
 
 ```bibtex
 @article{alabi2024cholecinstanceseg,
