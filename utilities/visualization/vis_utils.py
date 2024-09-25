@@ -205,10 +205,6 @@ class VisFromLabelMeToImg:
         assert os.path.exists(img_dir), 'the image directory does not exist' 
         assert os.path.exists(ann_dir), 'the annotation directory does not exist' 
         
-        if os.path.exists(vis_dir):
-            if len(os.listdir(vis_dir)):
-                raise ValueError('vis_dir exists, use a non_existing folder')
-        
         os.makedirs(vis_dir, exist_ok=True)
          
     

@@ -1,7 +1,11 @@
 import numpy as np
 import cv2
-
-## Numpy ann functions
+from os.path import join
+from utilities._general_utils.read_files import read_from_json 
+from  utilities.visualization.vis_utils import plot_instance_from_json_contour
+from utilities._general_utils.common_functions import get_unique_class_and_instance_id_in_ann
+from utilities.visualization.vis_utils import plot_instance_from_json_contour
+from utilities._general_utils.dataset_variables import CholecInstanceSegVariables
 
 def get_bbox_info_from_mask(mask: np.ndarray) -> list:
     """get the bounding_box boundary info for an instance from binary mask.   
@@ -84,8 +88,7 @@ def get_list_of_contour_dicts_for_all_instances_in_img_from_ann(ann: np.ndarray,
     Returns:
         list: list of dict  
     """    
-    from  utils.vis_utils import plot_instance_from_json_contour
-    from utils.get_information_from_file_name import get_unique_class_and_instance_id_in_ann
+    
     
     unique_class_instance = get_unique_class_and_instance_id_in_ann(ann)
     list_of_contour_info_dicts_for_all_instances_in_img = [] 
@@ -211,8 +214,7 @@ def get_list_of_contour_dicts_for_all_instances_in_img_from_json(json_dict: dict
     Returns:
         list: list of dict 
     """ 
-    from utils.vis_utils import plot_instance_from_json_contour
-    from static_variables.dataset_variables import CholecInstanceSegVariables 
+    
     INSTRUMENT_ID_TO_CLASS_DICT = CholecInstanceSegVariables.instrument_id_to_instrument_class_dict
     INSTRUMENT_CLASS_TO_ID_DICT = {instrument_class: instrument_id for instrument_id, instrument_class in INSTRUMENT_ID_TO_CLASS_DICT.items()}
     
@@ -270,8 +272,6 @@ def mask_or_contour_to_coco(annotation_name: str,
     Raises:
         ValueError: when we have a format different from numpy or json, raise error
     """      
-    from os.path import join
-    from utils.read_files import read_from_json
     
     '''
     First Get label_me_json or npy to a unified format called contour_dict. it is a list of dicts that looks like this
@@ -312,7 +312,25 @@ def mask_or_contour_to_coco(annotation_name: str,
         }
                
         coco_annotation["annotations"].append(annotation)
-        
+
+def initalize_coco_annotation(id_to_class):
+    coco_annotation = {
+        "images": [],
+        "annotations": [],
+        "categories": []
+    }
+    
+    id_to_class.pop(0, None)
+    
+    for class_id, class_name in id_to_class.items():
+        category = {
+            "id": class_id,
+            "name": class_name,
+            "supercategory": "instrument"
+        }
+        coco_annotation["categories"].append(category)
+    
+    return coco_annotation        
         
 def annotations_to_coco(dataset_path: str,
                         output_json_path: str,
@@ -320,39 +338,15 @@ def annotations_to_coco(dataset_path: str,
     """generate the coco_format for my numpy  and label_me json styled annotations. Requires mmdetection form.  
 
     Args:
-        dataset_path (str): path to the dataset to convery
+        dataset_path (str): path to the dataset to convert, needs to contain img_dir and ann_dir.
         output_json_path (str): json file store path
         vis (bool, optional): visualize things or not. Defaults to False.
     """    
     import os, json
     
-    coco_annotation = {
-        "images": [],
-        "annotations": [],
-        "categories": [{"id": 1, 
-                        "name": "grasper",
-                        "supercategory": "instrument"},
-                       {"id": 2, 
-                        "name": "hook",
-                        "supercategory": "instrument"},
-                       {"id": 3, 
-                        "name": "irrigator",
-                        "supercategory": "instrument"},
-                       {"id": 4, 
-                        "name": "clipper",
-                        "supercategory": "instrument"},
-                       {"id": 5, 
-                        "name": "bipolar",
-                        "supercategory": "instrument"},
-                        {"id": 6, 
-                        "name": "scissors",
-                        "supercategory": "instrument"},
-                       {"id": 7, 
-                        "name": "snare",
-                        "supercategory": "instrument"}                       
-                       ]
-    }
-
+    instrument_id_to_instrument_class_dict = CholecInstanceSegVariables.instrument_id_to_instrument_class_dict
+    coco_annotation = initalize_coco_annotation(instrument_id_to_instrument_class_dict)
+    
     img_list = sorted(os.listdir(os.path.join(dataset_path, 'img_dir')))
     ann_list = sorted(os.listdir(os.path.join(dataset_path, 'ann_dir')))
     
