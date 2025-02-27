@@ -39,3 +39,7 @@ prototypes/
 from_dataset/
 
 panoptic_quality/
+
+outputs/
+
+inputs/
